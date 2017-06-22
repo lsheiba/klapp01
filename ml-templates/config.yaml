@@ -1,0 +1,62 @@
+Args: --style=examples/style/udnie.jpg --train_dir=$RUNDIR --test=examples/content/chicago.jpg
+  --test-dir=/training/tests --content-weight=1.5e1 --checkpoint-iterations=1000 --batch-size=10
+  --train-path=/workspace/data/train2014 --vgg-path=/workspace/data/imagenet-vgg-verydeep-19.mat
+  --epochs=3 --style-weight=200 --limit_train=2000
+Cmd: style.py
+EnvVars: []
+ExecutionDir: /src/fast-style-transfer
+Images:
+  BaseImage: tensorflow/tensorflow
+  GpuImage: kuberlab/gpu-monitoring:latest
+  PSImage: tensorflow/tensorflow
+Jupyter:
+  UseGPU: true
+MonitoringNamespace: kuberlab
+PythonPackages: null
+Requests:
+  CPU: 100m
+  CPULimit: 8000m
+  GPU: 1
+  Memory: 2Gi
+  MemoryLimit: 64Gi
+  PsPods: 1
+  WorkerPods: 1
+Volumes:
+- isLibDir: false
+  isTrainLogDir: true
+  mountPath: /training
+  name: training
+  nfs:
+    path: /kuberlab
+    server: 192.168.1.55
+  subPath: training
+- gitRepo:
+    repository: https://github.com/dreyk/fast-style-transfer
+  isLibDir: false
+  isTrainLogDir: false
+  mountPath: /src
+  name: src
+  subPath: ""
+- isLibDir: true
+  isTrainLogDir: false
+  mountPath: /workspace/lib
+  name: lib
+  nfs:
+    path: /kuberlab
+    server: 192.168.1.55
+  subPath: lib
+- hostPath:
+    path: /fast-data
+  isLibDir: false
+  isTrainLogDir: false
+  mountPath: /workspace/data
+  name: data
+  subPath: ""
+- isLibDir: false
+  isTrainLogDir: false
+  mountPath: /test
+  name: test
+  nfs:
+    path: /kuberlab
+    server: 192.168.1.55
+  subPath: test
